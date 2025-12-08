@@ -2,12 +2,13 @@
 #SBATCH --job-name=pixart_train
 #SBATCH --output=logs/train_%j.out
 #SBATCH --error=logs/train_%j.err
-#SBATCH --time=10:00:00
-#SBATCH --partition=mesonet
-#SBATCH --account=m25206
+#SBATCH -p mesonet
+#SBATCH -N 1
+#SBATCH -c 16
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=10
-#SBATCH --mem=64G
+#SBATCH --time=48:00:00
+#SBATCH --mem=32G
+#SBATCH --account=m25206
 
 # Script de training PixArt avec le repo officiel
 # Utilise les features VAE/T5 pré-extraites
