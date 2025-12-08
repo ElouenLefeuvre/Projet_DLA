@@ -63,9 +63,11 @@ conda activate pixart
 echo ""
 echo "Installation des dépendances (PyTorch 2.1.1)..."
 pip install torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cu118
-pip install -r requirements.txt
-pip install wandb
-pip install accelerate
+
+# Installer les dépendances avec versions fixes
+echo "Installation des packages avec versions compatibles..."
+pip install -r ../finetune/requirements_fixed.txt
+
 echo "✓ Dépendances installées"
 
 # Télécharger le modèle pré-entraîné

@@ -1,0 +1,40 @@
+# Requirements fixes pour PixArt-alpha avec PyTorch 2.1.1
+# Compatible avec CUDA 11.8
+
+# Core ML
+torch==2.1.1
+torchaudio==2.1.1
+torchvision==0.16.1
+numpy<2
+
+# Vision & ML utils
+timm==0.6.12
+einops
+opencv-python
+
+# Transformers & Diffusion
+transformers>=4.25.1,<4.39.0
+diffusers>=0.21.0,<0.30.0
+sentencepiece~=0.1.99
+peft>=0.6.0
+
+# Training
+accelerate
+tensorboard
+tensorboardX
+wandb
+mmcv==1.7.0
+
+# Utils
+ftfy
+beautifulsoup4
+bs4
+protobuf==3.20.2
+yapf==0.40.1
+
+# UI
+gradio==4.1.1
+
+# Optimization
+xformers
+optimum
