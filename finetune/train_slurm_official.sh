@@ -3,7 +3,7 @@
 #SBATCH --output=logs/train_%j.out
 #SBATCH --error=logs/train_%j.err
 #SBATCH --time=10:00:00
-#SBATCH --partition=gpu
+#SBATCH --partition=mesonet
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=10
 #SBATCH --mem=64G
