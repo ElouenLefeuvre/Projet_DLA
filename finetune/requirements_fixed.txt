@@ -19,7 +19,7 @@ sentencepiece~=0.1.99
 peft>=0.6.0
 
 # Training
-accelerate
+accelerate==0.25.0
 tensorboard
 tensorboardX
 wandb
