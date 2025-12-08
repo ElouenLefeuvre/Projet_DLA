@@ -1,0 +1,10 @@
+torch>=2.0.0
+diffusers>=0.25.0
+transformers>=4.35.0
+accelerate>=0.25.0
+wandb
+Pillow
+tqdm
+torchvision
+xformers  # Pour optimiser l'attention
+bitsandbytes  # Pour quantization (optionnel)
