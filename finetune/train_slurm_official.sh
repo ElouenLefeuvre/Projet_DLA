@@ -32,6 +32,9 @@ conda activate pixart
 cd $SLURM_SUBMIT_DIR/..
 cd PixArt-alpha
 
+# Ajouter le répertoire parent au PYTHONPATH pour trouver le module diffusion
+export PYTHONPATH="${SLURM_SUBMIT_DIR}/..:$PYTHONPATH"
+
 # Créer le dossier de logs
 mkdir -p ../finetune/logs
 
