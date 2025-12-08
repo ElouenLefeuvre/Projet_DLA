@@ -68,7 +68,8 @@ echo "  Config file: $CONFIG_FILE"
 echo "  Dataset: $DATASET_ROOT"
 echo ""
 
-# Configurer wandb (optionnel)
+# Désactiver wandb (pas configuré sur le cluster)
+export WANDB_MODE="offline"
 export WANDB_PROJECT="pixart-flowers-experiment"
 export WANDB_NAME="model_${CAPTION_TYPE}"
 
@@ -82,7 +83,7 @@ python -m torch.distributed.launch \
     train_scripts/train.py \
     "$CONFIG_FILE" \
     --work-dir "../outputs/pixart_oxford_flowers102_${CAPTION_TYPE}" \
-    --report_to="wandb" \
+    --report_to="tensorboard" \
     --loss_report_name="train_loss"
 
 if [ $? -eq 0 ]; then
