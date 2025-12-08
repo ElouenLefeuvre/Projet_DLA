@@ -1,10 +1,13 @@
 # Configuration pour fine-tuning PixArt avec captions Gemini (Modèle C)
 # Basé sur PixArt_xl2_img512_internal_for_pokemon_sample_training.py
 
+import os
+
 _base_ = ['../../PixArt-alpha/configs/PixArt_xl2_internal.py']
 
 # Dataset configuration
-data_root = '/home/jvollet/Bureau/dla_projet/dla'
+# Chemin relatif au fichier de config
+data_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 dataset_name = 'oxford_flowers102_gemini'
 image_list_json = ['data_info.json']
 
