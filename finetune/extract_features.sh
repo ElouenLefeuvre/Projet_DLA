@@ -25,7 +25,7 @@ source ~/.bashrc
 conda activate diffusion
 
 # Aller dans le répertoire PixArt-alpha
-cd $SLURM_SUBMIT_DIR
+cd $SLURM_SUBMIT_DIR/..
 cd PixArt-alpha
 
 # Configuration des chemins
