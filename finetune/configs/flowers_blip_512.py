@@ -6,8 +6,8 @@ import os
 _base_ = ['../../PixArt-alpha/configs/PixArt_xl2_internal.py']
 
 # Dataset configuration
-# Chemin relatif au fichier de config
-data_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+# Le script est lancé depuis PixArt-alpha, donc .. pointe vers dla/
+data_root = os.path.abspath('..')
 dataset_name = 'oxford_flowers102_blip'
 image_list_json = ['data_info.json']
 
