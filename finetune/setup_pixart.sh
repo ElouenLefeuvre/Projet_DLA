@@ -5,6 +5,32 @@ echo "=========================================="
 echo "Configuration de l'environnement PixArt"
 echo "=========================================="
 
+# Vérifier si conda est installé
+if ! command -v conda &> /dev/null; then
+    echo "⚠ Conda n'est pas installé. Installation de Miniconda..."
+    
+    # Télécharger Miniconda
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
+    
+    # Installer Miniconda
+    bash /tmp/miniconda.sh -b -p $HOME/miniconda3
+    
+    # Initialiser conda
+    eval "$($HOME/miniconda3/bin/conda shell.bash hook)"
+    conda init bash
+    
+    # Nettoyer
+    rm /tmp/miniconda.sh
+    
+    echo "✓ Miniconda installé"
+    echo "⚠ Veuillez redémarrer votre terminal et relancer ce script"
+    exit 0
+else
+    echo "✓ Conda déjà installé"
+    # Initialiser conda pour ce script
+    eval "$(conda shell.bash hook)"
+fi
+
 # Aller dans le répertoire du projet
 cd "$(dirname "$0")/.."
 
