@@ -2,12 +2,14 @@
 #SBATCH --job-name=extract_features
 #SBATCH --output=logs/extract_%j.out
 #SBATCH --error=logs/extract_%j.err
-#SBATCH --time=04:00:00
-#SBATCH --partition=mesonet
-#SBATCH --account=m25206
+#SBATCH -p mesonet
+#SBATCH -N 1
+#SBATCH -c 16
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=10
+#SBATCH --time=12:00:00
 #SBATCH --mem=64G
+#SBATCH --account=m25206
+
 
 # Script pour extraire les features VAE et T5 avant le training
 # Cette étape DOIT être faite AVANT le training
