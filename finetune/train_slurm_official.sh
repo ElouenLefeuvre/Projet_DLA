@@ -29,7 +29,7 @@ eval "$(conda shell.bash hook)"
 conda activate pixart
 
 # Aller dans le répertoire PixArt-alpha
-cd $SLURM_SUBMIT_DIR
+cd $SLURM_SUBMIT_DIR/..
 cd PixArt-alpha
 
 # Créer le dossier de logs
