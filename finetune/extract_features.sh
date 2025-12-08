@@ -20,9 +20,11 @@ echo "Type de captions: $CAPTION_TYPE"
 echo "Job ID: $SLURM_JOB_ID"
 echo "=========================================="
 
+# Initialiser conda pour SLURM
+eval "$(conda shell.bash hook)"
+
 # Activer l'environnement
-source ~/.bashrc
-conda activate diffusion
+conda activate pixart
 
 # Aller dans le répertoire PixArt-alpha
 cd $SLURM_SUBMIT_DIR/..

@@ -21,9 +21,11 @@ echo "Node: $SLURMD_NODENAME"
 echo "GPU: $CUDA_VISIBLE_DEVICES"
 echo "=========================================="
 
+# Initialiser conda pour SLURM
+eval "$(conda shell.bash hook)"
+
 # Activer l'environnement
-source ~/.bashrc
-conda activate diffusion
+conda activate pixart
 
 # Aller dans le répertoire PixArt-alpha
 cd $SLURM_SUBMIT_DIR

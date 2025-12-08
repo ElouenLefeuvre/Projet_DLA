@@ -20,23 +20,23 @@ fi
 cd PixArt-alpha
 
 # Créer l'environnement conda si pas déjà fait
-if ! conda env list | grep -q "diffusion"; then
+if ! conda env list | grep -q "pixart"; then
     echo ""
-    echo "Création de l'environnement conda 'diffusion'..."
-    conda create -n diffusion python=3.10 -y
+    echo "Création de l'environnement conda 'pixart'..."
+    conda create -n pixart python=3.9 -y
     echo "✓ Environnement créé"
 else
-    echo "✓ Environnement 'diffusion' déjà présent"
+    echo "✓ Environnement 'pixart' déjà présent"
 fi
 
 # Activer l'environnement
 source ~/.bashrc
-conda activate diffusion
+conda activate pixart
 
 # Installer les dépendances
 echo ""
-echo "Installation des dépendances..."
-pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1 --index-url https://download.pytorch.org/whl/cu118
+echo "Installation des dépendances (PyTorch 2.1.1)..."
+pip install torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cu118
 pip install -r requirements.txt
 pip install wandb
 pip install accelerate
