@@ -4,6 +4,7 @@
 #SBATCH --error=logs/train_%j.err
 #SBATCH --time=10:00:00
 #SBATCH --partition=mesonet
+#SBATCH --account=m25206
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=10
 #SBATCH --mem=64G
