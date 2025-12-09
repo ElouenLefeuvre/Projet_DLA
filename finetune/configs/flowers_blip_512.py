@@ -9,7 +9,7 @@ _base_ = ['../../PixArt-alpha/configs/PixArt_xl2_internal.py']
 # Le script est lancé depuis PixArt-alpha, donc .. pointe vers dla/
 data_root = os.path.abspath('..')
 dataset_name = 'oxford_flowers102_blip'
-image_list_json = ['partition/data_info.json']
+image_list_json = ['data_info.json']
 
 data = dict(
     type='InternalData',
