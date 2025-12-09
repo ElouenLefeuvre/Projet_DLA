@@ -76,10 +76,21 @@ export WANDB_NAME="model_${CAPTION_TYPE}"
 echo "Démarrage du training..."
 echo ""
 
+# Assigner un port différent selon le type de caption pour éviter les conflits
+case $CAPTION_TYPE in
+    blip)   MASTER_PORT=29500 ;;
+    llava)  MASTER_PORT=29501 ;;
+    gemini) MASTER_PORT=29502 ;;
+    *)      MASTER_PORT=29500 ;;
+esac
+
+echo "Master port: $MASTER_PORT"
+echo ""
+
 # Lancer le training avec le repo officiel PixArt-alpha
 python -m torch.distributed.launch \
     --nproc_per_node=1 \
-    --master_port=29500 \
+    --master_port=$MASTER_PORT \
     train_scripts/train.py \
     "$CONFIG_FILE" \
     --work-dir "../outputs/pixart_oxford_flowers102_${CAPTION_TYPE}" \
