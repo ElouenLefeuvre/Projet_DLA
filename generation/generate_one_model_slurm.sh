@@ -6,7 +6,7 @@
 #SBATCH -N 1
 #SBATCH -c 8
 #SBATCH --gres=gpu:1
-#SBATCH --time=04:00:00
+#SBATCH --time=48:00:00
 #SBATCH --mem=32G
 #SBATCH --account=m25206
 
