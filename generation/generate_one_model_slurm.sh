@@ -17,10 +17,11 @@
 #
 # Exemples:
 #   sbatch generate_one_model_slurm.sh llava
+#   sbatch generate_one_model_slurm.sh base
 #   sbatch generate_one_model_slurm.sh llava datasets/oxford_flowers102_blip_test/partition/data_info.json
 #   sbatch generate_one_model_slurm.sh llava datasets/oxford_flowers102_blip_test/partition/data_info.json datasets/oxford_flowers102_llava_test/partition/data_info.json datasets/oxford_flowers102_gemini_test/partition/data_info.json
 
-MODEL_TYPE=${1:-"llava"}  # blip, llava, ou gemini
+MODEL_TYPE=${1:-"base"}  # blip, llava, gemini, ou base; défaut="base"
 shift  # Enlever le premier argument pour récupérer les JSON
 
 # Récupérer les JSON en argument (ou laisser vide pour le défaut)
@@ -84,9 +85,9 @@ if [ $? -eq 0 ]; then
     echo "✅ Génération terminée avec succès !"
     echo "=========================================="
     echo ""
-    echo "Images générées dans: generated_images/$MODEL_TYPE/"
+    echo "Images générées dans: $OUTPUT_DIR/"
     for JSON_TYPE in data_info_blip data_info_llava data_info_gemini; do
-        COUNT=$(ls generated_images/$MODEL_TYPE/$JSON_TYPE/*.png 2>/dev/null | wc -l)
+        COUNT=$(ls $OUTPUT_DIR/$JSON_TYPE/*.png 2>/dev/null | wc -l)
         echo "  - $JSON_TYPE: $COUNT images"
     done
     echo ""

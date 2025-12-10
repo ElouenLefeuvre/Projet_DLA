@@ -73,34 +73,43 @@ def load_captions_from_json(json_paths):
     return all_captions
 
 def setup_pipeline(model_path, device='cuda'):
-    """Configure le pipeline PixArt avec le modèle fine-tuné."""
-    print(f"Chargement du transformer fine-tuné depuis: {model_path}")
-
-    # 1. Charger le Transformer fine-tuné
-    # On gère le cas où model_path contient un sous-dossier 'transformer' ou est directement le dossier transformer
-    if os.path.exists(os.path.join(model_path, "transformer")):
-        transformer = Transformer2DModel.from_pretrained(
-            model_path, 
-            subfolder="transformer", 
+    """Configure le pipeline PixArt avec le modèle fine-tuné ou de base."""
+    
+    if model_path == "base":
+        print("Chargement du pipeline de base (PixArt-XL-2-512x512) SANS finetuning...")
+        pipe = PixArtAlphaPipeline.from_pretrained(
+            "PixArt-alpha/PixArt-XL-2-512x512",
             torch_dtype=torch.float16,
-            use_safetensors=True
+            use_safetensors=True,
         )
     else:
-        transformer = Transformer2DModel.from_pretrained(
-            model_path, 
-            torch_dtype=torch.float16,
-            use_safetensors=True
-        )
+        print(f"Chargement du transformer fine-tuné depuis: {model_path}")
 
-    print("Chargement du pipeline de base (PixArt-XL-2-512x512)...")
-    
-    # 2. Charger le pipeline de base avec le transformer remplacé
-    pipe = PixArtAlphaPipeline.from_pretrained(
-        "PixArt-alpha/PixArt-XL-2-512x512",
-        transformer=transformer,
-        torch_dtype=torch.float16,
-        use_safetensors=True,
-    )
+        # 1. Charger le Transformer fine-tuné
+        # On gère le cas où model_path contient un sous-dossier 'transformer' ou est directement le dossier transformer
+        if os.path.exists(os.path.join(model_path, "transformer")):
+            transformer = Transformer2DModel.from_pretrained(
+                model_path, 
+                subfolder="transformer", 
+                torch_dtype=torch.float16,
+                use_safetensors=True
+            )
+        else:
+            transformer = Transformer2DModel.from_pretrained(
+                model_path, 
+                torch_dtype=torch.float16,
+                use_safetensors=True
+            )
+
+        print("Chargement du pipeline de base (PixArt-XL-2-512x512)...")
+        
+        # 2. Charger le pipeline de base avec le transformer remplacé
+        pipe = PixArtAlphaPipeline.from_pretrained(
+            "PixArt-alpha/PixArt-XL-2-512x512",
+            transformer=transformer,
+            torch_dtype=torch.float16,
+            use_safetensors=True,
+        )
 
     # Utiliser DPM-Solver pour accélérer la génération
     pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
@@ -164,8 +173,8 @@ def generate_images(pipe, captions_dict, output_base_dir, num_inference_steps=20
 
 def main():
     parser = argparse.ArgumentParser(description="Générer des images avec un modèle PixArt fine-tuné")
-    parser.add_argument('--model_type', type=str, required=True, choices=['blip', 'llava', 'gemini'],
-                        help="Type de modèle à utiliser (blip, llava, ou gemini)")
+    parser.add_argument('--model_type', type=str, required=True, choices=['blip', 'llava', 'gemini', 'base'],
+                        help="Type de modèle à utiliser (blip, llava, gemini, ou base)")
     parser.add_argument('--model_path', type=str, default=None,
                         help="Chemin vers le modèle fine-tuné (défaut: outputs/pixart_oxford_flowers102_<type>/diffusers)")
     parser.add_argument('--json_paths', type=str, nargs='+', required=True,
@@ -183,7 +192,10 @@ def main():
 
     # Chemins par défaut
     if args.model_path is None:
-        args.model_path = f"outputs/pixart_oxford_flowers102_{args.model_type}/diffusers"
+        if args.model_type == 'base':
+            args.model_path = "base"
+        else:
+            args.model_path = f"outputs/pixart_oxford_flowers102_{args.model_type}/diffusers"
 
     if args.json_paths is None:
         # Aucun JSON par défaut - l'utilisateur DOIT spécifier
@@ -209,8 +221,8 @@ def main():
     print("="*60)
     print()
 
-    # Vérifier que le modèle existe
-    if not os.path.exists(args.model_path):
+    # Vérifier que le modèle existe (sauf si c'est 'base')
+    if args.model_type != 'base' and not os.path.exists(args.model_path):
         print(f"❌ ERREUR: Modèle non trouvé: {args.model_path}")
         print("Vérifiez que le training a bien terminé et que le modèle est sauvegardé.")
         return
