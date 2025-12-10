@@ -22,15 +22,20 @@ echo "Epoch | Loss moyenne | Loss min | Loss max | Samples"
 echo "------|--------------|----------|----------|--------"
 
 # Extraire epoch et loss de chaque ligne
+# Format: Step/Epoch [12796/200][60/64]:... train_loss:0.1475, ...
 grep "Step/Epoch" "$LOG_FILE" | \
 grep "train_loss" | \
 tail -n 3200 | \
-awk -F'Step/Epoch \\[|\\]\\[|/|train_loss:|,' '{
-    # $2 = step, $3 = epoch, $6 = loss
-    epoch = $3
-    loss = $6
-    gsub(/^[ \t]+/, "", loss)  # trim whitespace
-    if (loss > 0) {
+awk '{
+    # Extraire epoch depuis Step/Epoch [step/epoch]
+    match($0, /Step\/Epoch \[[0-9]+\/([0-9]+)\]/, arr)
+    epoch = arr[1]
+    
+    # Extraire loss depuis train_loss:X.XXXX
+    match($0, /train_loss:([0-9]+\.[0-9]+)/, arr2)
+    loss = arr2[1]
+    
+    if (epoch > 0 && loss > 0) {
         sum[epoch] += loss
         count[epoch]++
         if (loss < min[epoch] || min[epoch] == 0) min[epoch] = loss
@@ -58,11 +63,13 @@ echo "=========================================="
 BEST_EPOCH=$(grep "Step/Epoch" "$LOG_FILE" | \
 grep "train_loss" | \
 tail -n 3200 | \
-awk -F'Step/Epoch \\[|\\]\\[|/|train_loss:|,' '{
-    epoch = $3
-    loss = $6
-    gsub(/^[ \t]+/, "", loss)
-    if (loss > 0) {
+awk '{
+    match($0, /Step\/Epoch \[[0-9]+\/([0-9]+)\]/, arr)
+    epoch = arr[1]
+    match($0, /train_loss:([0-9]+\.[0-9]+)/, arr2)
+    loss = arr2[1]
+    
+    if (epoch > 0 && loss > 0) {
         sum[epoch] += loss
         count[epoch]++
     }
