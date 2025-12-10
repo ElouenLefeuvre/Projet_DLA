@@ -18,31 +18,36 @@ echo ""
 
 # Extraire les loss moyennes par epoch (dernières 50 epochs)
 echo "Loss moyenne par epoch (dernières 50 epochs):"
-echo "Epoch | Loss moyenne | Loss min | Loss max"
-echo "------|--------------|----------|----------"
+echo "Epoch | Loss moyenne | Loss min | Loss max | Samples"
+echo "------|--------------|----------|----------|--------"
 
-grep "train_loss" "$LOG_FILE" | tail -n 3200 | \
-awk -F'train_loss:' '{print $2}' | \
-awk -F',' '{print $1}' | \
-awk 'NR%64==0 {
-    if (count > 0) {
-        avg = sum/count
-        printf "%-5d | %.4f       | %.4f    | %.4f\n", epoch, avg, min, max
+# Extraire epoch et loss de chaque ligne
+grep "Step/Epoch" "$LOG_FILE" | \
+grep "train_loss" | \
+tail -n 3200 | \
+awk -F'Step/Epoch \\[|\\]\\[|/|train_loss:|,' '{
+    # $2 = step, $3 = epoch, $6 = loss
+    epoch = $3
+    loss = $6
+    gsub(/^[ \t]+/, "", loss)  # trim whitespace
+    if (loss > 0) {
+        sum[epoch] += loss
+        count[epoch]++
+        if (loss < min[epoch] || min[epoch] == 0) min[epoch] = loss
+        if (loss > max[epoch]) max[epoch] = loss
     }
-    epoch++
-    sum=0; count=0; min=999; max=0
-}
-{
-    sum+=$1; count++
-    if ($1 < min) min=$1
-    if ($1 > max) max=$1
 }
 END {
-    if (count > 0) {
-        avg = sum/count
-        printf "%-5d | %.4f       | %.4f    | %.4f\n", epoch, avg, min, max
+    # Trier et afficher les epochs
+    n = asorti(sum, sorted_epochs)
+    for (i = 1; i <= n; i++) {
+        e = sorted_epochs[i]
+        if (count[e] > 0) {
+            avg = sum[e] / count[e]
+            printf "%-5d | %.4f       | %.4f    | %.4f    | %d\n", e, avg, min[e], max[e], count[e]
+        }
     }
-}' epoch=151
+}'
 
 echo ""
 echo "=========================================="
@@ -50,26 +55,32 @@ echo "Recommandations:"
 echo "=========================================="
 
 # Trouver l'epoch avec la loss moyenne la plus basse
-BEST_EPOCH=$(grep "train_loss" "$LOG_FILE" | tail -n 3200 | \
-awk -F'train_loss:' '{print $2}' | \
-awk -F',' '{print $1}' | \
-awk 'NR%64==0 {
-    if (count > 0) {
-        avg = sum/count
-        if (avg < best_avg || best_avg == 0) {
-            best_avg = avg
-            best_epoch = epoch
-        }
+BEST_EPOCH=$(grep "Step/Epoch" "$LOG_FILE" | \
+grep "train_loss" | \
+tail -n 3200 | \
+awk -F'Step/Epoch \\[|\\]\\[|/|train_loss:|,' '{
+    epoch = $3
+    loss = $6
+    gsub(/^[ \t]+/, "", loss)
+    if (loss > 0) {
+        sum[epoch] += loss
+        count[epoch]++
     }
-    epoch++
-    sum=0; count=0
-}
-{
-    sum+=$1; count++
 }
 END {
+    best_avg = 999
+    best_epoch = 0
+    for (e in sum) {
+        if (count[e] > 0) {
+            avg = sum[e] / count[e]
+            if (avg < best_avg) {
+                best_avg = avg
+                best_epoch = e
+            }
+        }
+    }
     print best_epoch
-}' epoch=151)
+}')
 
 echo "Meilleur epoch (loss moyenne la plus basse): $BEST_EPOCH"
 echo ""
