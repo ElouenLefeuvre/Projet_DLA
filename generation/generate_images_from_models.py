@@ -14,7 +14,7 @@ import argparse
 import os
 from pathlib import Path
 import torch
-from diffusers import PixArtAlphaPipeline, DPMSolverMultistepScheduler
+from diffusers import PixArtAlphaPipeline, DPMSolverMultistepScheduler, Transformer2DModel
 from tqdm import tqdm
 from PIL import Image
 
