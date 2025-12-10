@@ -17,8 +17,8 @@
 #
 # Exemples:
 #   sbatch generate_one_model_slurm.sh llava
-#   sbatch generate_one_model_slurm.sh llava datasets/oxford_flowers102_blip/partition/data_info.json
-#   sbatch generate_one_model_slurm.sh llava datasets/oxford_flowers102_blip/partition/data_info.json datasets/oxford_flowers102_llava/partition/data_info.json
+#   sbatch generate_one_model_slurm.sh llava datasets/oxford_flowers102_blip_test/partition/data_info.json
+#   sbatch generate_one_model_slurm.sh llava datasets/oxford_flowers102_blip_test/partition/data_info.json datasets/oxford_flowers102_llava_test/partition/data_info.json datasets/oxford_flowers102_gemini_test/partition/data_info.json
 
 MODEL_TYPE=${1:-"llava"}  # blip, llava, ou gemini
 shift  # Enlever le premier argument pour récupérer les JSON
