@@ -59,11 +59,30 @@ def load_captions_from_json(json_paths):
 
 def setup_pipeline(model_path, device='cuda'):
     """Configure le pipeline PixArt avec le modèle fine-tuné."""
-    print(f"Chargement du modèle depuis: {model_path}")
+    print(f"Chargement du transformer fine-tuné depuis: {model_path}")
 
-    # Charger le pipeline
+    # 1. Charger le Transformer fine-tuné
+    # On gère le cas où model_path contient un sous-dossier 'transformer' ou est directement le dossier transformer
+    if os.path.exists(os.path.join(model_path, "transformer")):
+        transformer = Transformer2DModel.from_pretrained(
+            model_path, 
+            subfolder="transformer", 
+            torch_dtype=torch.float16,
+            use_safetensors=True
+        )
+    else:
+        transformer = Transformer2DModel.from_pretrained(
+            model_path, 
+            torch_dtype=torch.float16,
+            use_safetensors=True
+        )
+
+    print("Chargement du pipeline de base (PixArt-XL-2-512x512)...")
+    
+    # 2. Charger le pipeline de base avec le transformer remplacé
     pipe = PixArtAlphaPipeline.from_pretrained(
-        model_path,
+        "PixArt-alpha/PixArt-XL-2-512x512",
+        transformer=transformer,
         torch_dtype=torch.float16,
         use_safetensors=True,
     )
@@ -133,7 +152,7 @@ def main():
     parser.add_argument('--model_type', type=str, required=True, choices=['blip', 'llava', 'gemini'],
                         help="Type de modèle à utiliser (blip, llava, ou gemini)")
     parser.add_argument('--model_path', type=str, default=None,
-                        help="Chemin vers le modèle fine-tuné (par défaut: outputs/pixart_oxford_flowers102_<model_type>)")
+                        help="Chemin vers le modèle fine-tuné (défaut: outputs/pixart_oxford_flowers102_<type>/diffusers)")
     parser.add_argument('--json_paths', type=str, nargs='+', required=True,
                         help="Chemin(s) vers le(s) fichier(s) JSON (plusieurs possibles). Ex: --json_paths file1.json file2.json")
     parser.add_argument('--output_dir', type=str, default=None,
@@ -149,7 +168,7 @@ def main():
 
     # Chemins par défaut
     if args.model_path is None:
-        args.model_path = f"outputs/pixart_oxford_flowers102_{args.model_type}"
+        args.model_path = f"outputs/pixart_oxford_flowers102_{args.model_type}/diffusers"
 
     if args.json_paths is None:
         # Aucun JSON par défaut - l'utilisateur DOIT spécifier
