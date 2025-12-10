@@ -12,6 +12,7 @@ Usage:
 import json
 import argparse
 import os
+import re
 from pathlib import Path
 import torch
 from diffusers import PixArtAlphaPipeline, DPMSolverMultistepScheduler, Transformer2DModel
@@ -35,8 +36,22 @@ def load_captions_from_json(json_paths):
     all_captions = {}
 
     for json_path in json_paths:
-        # Extraire le nom du fichier sans extension pour l'utiliser comme clé
-        json_name = Path(json_path).stem  # Ex: "data_info_blip" -> "data_info_blip"
+        path_obj = Path(json_path)
+        
+        # Essayer d'extraire le nom du modèle depuis le chemin du dossier
+        # Ex: datasets/oxford_flowers102_blip_test/partition/data_info.json -> blip
+        # On regarde le dossier grand-parent (oxford_flowers102_blip_test)
+        parent_dir = path_obj.parent.parent.name
+        match = re.search(r'oxford_flowers102_(.+?)_test', parent_dir)
+        
+        if match:
+            # Si on trouve le pattern, on utilise le groupe capturé (blip, llava, etc.)
+            nom = match.group(1)
+            json_name = f"{nom}_captions"
+        else:
+            # Fallback : on utilise le nom du dossier parent du JSON + le nom du fichier
+            # Ex: partition_data_info ou oxford_flowers_data_info selon la profondeur
+            json_name = f"{parent_dir}_{path_obj.stem}"
 
         # Charger le JSON
         with open(json_path, 'r') as f:
