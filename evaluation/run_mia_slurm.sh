@@ -19,9 +19,6 @@ echo "=========================================="
 eval "$(conda shell.bash hook)"
 conda activate pixart
 
-# Installer les dépendances manquantes à la volée
-pip install scikit-learn matplotlib
-
 # Aller dans le dossier où le script est soumis (dla/evaluation)
 cd $SLURM_SUBMIT_DIR
 
