@@ -1,0 +1,66 @@
+==========================================
+Job ID: 29598
+Running CLIP Score Evaluation...
+Node: juliet2
+==========================================
+Initialisation du modèle CLIP sur cuda...
+
+Evaluating Model: base
+  Sous-dossier: blip_captions (340 images)
+    CLIP Score: 31.73 ± 2.16
+  Sous-dossier: llava_captions (340 images)
+    CLIP Score: 33.98 ± 1.68
+  Sous-dossier: gemini_captions (340 images)
+    CLIP Score: 31.86 ± 2.16
+  👉 GLOBAL Model Score: 32.52 ± 2.26
+
+Evaluating Model: blip
+  Sous-dossier: blip_captions (340 images)
+    CLIP Score: 31.72 ± 2.30
+  Sous-dossier: llava_captions (340 images)
+    CLIP Score: 33.50 ± 2.26
+  Sous-dossier: gemini_captions (340 images)
+    CLIP Score: 33.36 ± 2.47
+  👉 GLOBAL Model Score: 32.86 ± 2.48
+
+Evaluating Model: llava
+  Sous-dossier: blip_captions (340 images)
+    CLIP Score: 31.96 ± 2.47
+  Sous-dossier: llava_captions (340 images)
+    CLIP Score: 32.35 ± 2.57
+  Sous-dossier: gemini_captions (340 images)
+    CLIP Score: 32.13 ± 2.83
+  👉 GLOBAL Model Score: 32.14 ± 2.63
+
+Evaluating Model: gemini
+  Sous-dossier: blip_captions (340 images)
+    CLIP Score: 33.25 ± 2.30
+  Sous-dossier: llava_captions (340 images)
+    CLIP Score: 33.77 ± 2.11
+  Sous-dossier: gemini_captions (340 images)
+    CLIP Score: 33.62 ± 2.39
+  👉 GLOBAL Model Score: 33.55 ± 2.28
+
+Résultats sauvegardés dans clip_scores.json
+
+================================================================================
+Model      | Caption Type         | CLIP Score     
+--------------------------------------------------------------------------------
+base       | blip_captions        | 31.7342 ± 2.1642
+base       | llava_captions       | 33.9766 ± 1.6819
+base       | gemini_captions      | 31.8560 ± 2.1596
+base       | GLOBAL               | 32.5222 ± 2.2625 ***
+blip       | blip_captions        | 31.7174 ± 2.2954
+blip       | llava_captions       | 33.4959 ± 2.2600
+blip       | gemini_captions      | 33.3637 ± 2.4743
+blip       | GLOBAL               | 32.8590 ± 2.4807 ***
+llava      | blip_captions        | 31.9578 ± 2.4719
+llava      | llava_captions       | 32.3453 ± 2.5710
+llava      | gemini_captions      | 32.1264 ± 2.8257
+llava      | GLOBAL               | 32.1432 ± 2.6319 ***
+gemini     | blip_captions        | 33.2510 ± 2.3028
+gemini     | llava_captions       | 33.7699 ± 2.1094
+gemini     | gemini_captions      | 33.6184 ± 2.3941
+gemini     | GLOBAL               | 33.5465 ± 2.2823 ***
+================================================================================
+Evaluation terminée.
