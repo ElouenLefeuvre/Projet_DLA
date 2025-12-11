@@ -199,7 +199,33 @@ def generate_comparison(pipe, sample, output_dir, num_inference_steps=20, guidan
     
     # Charger l'image originale
     if os.path.exists(sample['image_path']):
-        original = Image.open(sample['image_path']).convert('RGB').resize((512, 512))
+        original = Image.open(sample['image_path']).convert('RGB')
+        
+        # Crop centré pour obtenir 512x512
+        width, height = original.size
+        
+        # Calculer les dimensions du crop
+        if width > height:
+            # Image horizontale : crop sur la largeur
+            new_width = height
+            left = (width - new_width) // 2
+            top = 0
+            right = left + new_width
+            bottom = height
+        else:
+            # Image verticale : crop sur la hauteur
+            new_height = width
+            left = 0
+            top = (height - new_height) // 2
+            right = width
+            bottom = top + new_height
+        
+        # Crop pour obtenir un carré
+        original = original.crop((left, top, right, bottom))
+        
+        # Resize uniquement si nécessaire (pour obtenir exactement 512x512)
+        if original.size != (512, 512):
+            original = original.resize((512, 512), Image.Resampling.LANCZOS)
     else:
         # Si l'image n'existe pas, créer un placeholder noir
         original = Image.new('RGB', (512, 512), color='black')
