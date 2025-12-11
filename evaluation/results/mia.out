@@ -1,0 +1,80 @@
+==========================================
+Job ID: 29607
+Running Membership Inference Attack (MIA)
+Node: juliet2
+==========================================
+
+>>> Running MIA on BLIP Model...
+==================================================
+MIA Evaluation for Model: blip
+Model Path: ../outputs/pixart_oxford_flowers102_blip/diffusers
+Train Dir (Members): ../datasets/oxford_flowers102_blip
+Test Dir (Non-Members): ../datasets/oxford_flowers102_blip_test
+Samples: 100 per group
+==================================================
+Chargement du modèle...
+Chargement des échantillons...
+  Train samples: 100
+  Test samples: 100
+Calcul des losses (Members)...
+Calcul des losses (Non-Members)...
+
+---------------- Résultats ----------------
+Mean Loss (Members/Train):     0.41596
+Mean Loss (Non-Members/Test):  0.32943
+MIA Attack AUC-ROC:            0.4372
+-------------------------------------------
+✅  Peu ou pas de mémorisation détectée (AUC proche de 0.50)
+
+Histogramme sauvegardé: mia_histogram_blip.png
+
+>>> Running MIA on LLaVA Model...
+==================================================
+MIA Evaluation for Model: llava
+Model Path: ../outputs/pixart_oxford_flowers102_llava/diffusers
+Train Dir (Members): ../datasets/oxford_flowers102_llava
+Test Dir (Non-Members): ../datasets/oxford_flowers102_llava_test
+Samples: 100 per group
+==================================================
+Chargement du modèle...
+Chargement des échantillons...
+  Train samples: 100
+  Test samples: 100
+Calcul des losses (Members)...
+Calcul des losses (Non-Members)...
+
+---------------- Résultats ----------------
+Mean Loss (Members/Train):     0.37316
+Mean Loss (Non-Members/Test):  0.41196
+MIA Attack AUC-ROC:            0.5145
+-------------------------------------------
+✅  Peu ou pas de mémorisation détectée (AUC proche de 0.50)
+
+Histogramme sauvegardé: mia_histogram_llava.png
+
+>>> Running MIA on Gemini Model...
+==================================================
+MIA Evaluation for Model: gemini
+Model Path: ../outputs/pixart_oxford_flowers102_gemini/diffusers
+Train Dir (Members): ../datasets/oxford_flowers102_gemini
+Test Dir (Non-Members): ../datasets/oxford_flowers102_gemini_test
+Samples: 100 per group
+==================================================
+Chargement du modèle...
+Chargement des échantillons...
+  Train samples: 100
+  Test samples: 100
+Calcul des losses (Members)...
+Calcul des losses (Non-Members)...
+
+---------------- Résultats ----------------
+Mean Loss (Members/Train):     0.43503
+Mean Loss (Non-Members/Test):  0.34106
+MIA Attack AUC-ROC:            0.4317
+-------------------------------------------
+✅  Peu ou pas de mémorisation détectée (AUC proche de 0.50)
+
+Histogramme sauvegardé: mia_histogram_gemini.png
+
+==========================================
+MIA Evaluation Completed!
