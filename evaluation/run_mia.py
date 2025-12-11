@@ -109,6 +109,10 @@ def compute_loss(pipeline, image, prompt, generator=None):
     if pipeline.scheduler.config.prediction_type == "v_prediction":
         target = pipeline.scheduler.get_velocity(latents, noise, timesteps)
         
+    # Si le modèle prédit aussi la variance (8 channels), on ne garde que la prédiction (4 channels)
+    if model_pred.shape[1] == 2 * target.shape[1]:
+        model_pred, _ = model_pred.chunk(2, dim=1)
+        
     loss = F.mse_loss(model_pred.float(), target.float(), reduction="mean")
     
     return loss.item()
