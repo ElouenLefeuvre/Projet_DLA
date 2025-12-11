@@ -292,7 +292,7 @@ def main():
         print(f"{'='*60}\n")
         
         # Chemins
-        model_path = f"outputs/pixart_oxford_flowers102_{model_type}_diffusers"
+        model_path = f"outputs/pixart_oxford_flowers102_{model_type}/diffusers"
         dataset_path = f"datasets/oxford_flowers102_{model_type}"
         model_output_dir = output_dir / model_type
         model_output_dir.mkdir(parents=True, exist_ok=True)
