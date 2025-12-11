@@ -172,17 +172,22 @@ def create_text_image(text, width=512, height=512, font_size=16):
     
     return img
 
-def generate_comparison(pipe, sample, output_path, num_inference_steps=20, guidance_scale=4.5):
+def generate_comparison(pipe, sample, output_dir, num_inference_steps=20, guidance_scale=4.5):
     """
     Génère une image et la compare avec l'originale.
+    Sauvegarde dans un dossier dédié avec tous les fichiers séparés.
     
     Args:
         pipe: Pipeline PixArt
         sample: Dict avec 'prompt', 'image_path', 'id'
-        output_path: Chemin de sortie pour l'image de comparaison
+        output_dir: Dossier de base pour sauvegarder (sera créé un sous-dossier comparison_{id})
         num_inference_steps: Nombre de steps d'inférence
         guidance_scale: Guidance scale
     """
+    # Créer un dossier pour cet échantillon
+    sample_dir = Path(output_dir) / f"comparison_{sample['id']}"
+    sample_dir.mkdir(parents=True, exist_ok=True)
+    
     # Générer l'image
     generated = pipe(
         prompt=sample['prompt'],
@@ -198,6 +203,14 @@ def generate_comparison(pipe, sample, output_path, num_inference_steps=20, guida
     else:
         # Si l'image n'existe pas, créer un placeholder noir
         original = Image.new('RGB', (512, 512), color='black')
+    
+    # Sauvegarder les images individuelles
+    original.save(sample_dir / "original.jpg")
+    generated.save(sample_dir / "generated.jpg")
+    
+    # Sauvegarder le caption
+    with open(sample_dir / "caption.txt", 'w') as f:
+        f.write(sample['prompt'])
     
     # Créer une image avec le prompt
     prompt_text = f"ID: {sample['id']}\n\nPrompt:\n{sample['prompt']}"
@@ -249,8 +262,8 @@ def generate_comparison(pipe, sample, output_path, num_inference_steps=20, guida
         )
         draw.text((x, y), label_text, fill='black', font=label_font)
     
-    # Sauvegarder
-    comparison.save(output_path)
+    # Sauvegarder l'image de comparaison
+    comparison.save(sample_dir / "comparison.jpg")
     
     return comparison
 
@@ -331,22 +344,14 @@ def main():
         # Générer les comparaisons
         print("3. Génération des images de comparaison...")
         for i, sample in enumerate(tqdm(samples, desc=f"  {model_type}")):
-            output_path = model_output_dir / f"comparison_{sample['id']}.jpg"
-            
             try:
                 generate_comparison(
                     pipe=pipe,
                     sample=sample,
-                    output_path=output_path,
+                    output_dir=model_output_dir,
                     num_inference_steps=args.num_inference_steps,
                     guidance_scale=args.guidance_scale
                 )
-                
-                # Sauvegarder aussi le prompt
-                prompt_path = model_output_dir / f"comparison_{sample['id']}.txt"
-                with open(prompt_path, 'w') as f:
-                    f.write(sample['prompt'])
-                    
             except Exception as e:
                 print(f"\n   ⚠️  Erreur pour l'échantillon {sample['id']}: {e}")
                 continue
