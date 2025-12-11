@@ -86,12 +86,20 @@ def compute_loss(pipeline, image, prompt, generator=None):
     noisy_latents = pipeline.scheduler.add_noise(latents, noise, timesteps).to(dtype=torch.float16)
     
     # 4. Prédire le bruit/velocity avec le Transformer
+    # PixArt nécessite resolution et aspect_ratio comme conditionnement supplémentaire
+    # Pour 512x512
+    resolution = torch.tensor([512, 512], device=device, dtype=torch.float16).repeat(bsz, 1)
+    aspect_ratio = torch.tensor([1.0], device=device, dtype=torch.float16).repeat(bsz, 1)
+    
+    added_cond_kwargs = {"resolution": resolution, "aspect_ratio": aspect_ratio}
+    
     with torch.no_grad():
         model_pred = pipeline.transformer(
             noisy_latents,
             encoder_hidden_states=prompt_embeds,
             encoder_attention_mask=prompt_attention_mask,
             timestep=timesteps,
+            added_cond_kwargs=added_cond_kwargs
         ).sample
         
     # 5. Calculer la Loss (MSE)
