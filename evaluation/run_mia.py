@@ -70,7 +70,7 @@ def compute_loss(pipeline, image, prompt, generator=None):
         
     # 2. Préparer le prompt (T5 encoding)
     with torch.no_grad():
-        prompt_embeds, prompt_attention_mask = pipeline.encode_prompt(
+        prompt_embeds, prompt_attention_mask, _, _ = pipeline.encode_prompt(
             prompt, do_classifier_free_guidance=False
         )
         
