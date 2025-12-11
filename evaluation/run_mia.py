@@ -75,7 +75,7 @@ def compute_loss(pipeline, image, prompt, generator=None):
         )
         
     # 3. Ajouter du bruit
-    noise = torch.randn(latents.shape, device=device, generator=generator)
+    noise = torch.randn(latents.shape, device=device, generator=generator).to(dtype=torch.float16)
     
     # On choisit un timestep t aléatoire (ou fixe pour être déterministe)
     # Pour MIA, souvent les timesteps intermédiaires (ex: 100-300 sur 1000) révèlent le plus d'overfitting
@@ -83,7 +83,7 @@ def compute_loss(pipeline, image, prompt, generator=None):
     bsz = latents.shape[0]
     timesteps = torch.randint(0, pipeline.scheduler.config.num_train_timesteps, (bsz,), device=device).long()
     
-    noisy_latents = pipeline.scheduler.add_noise(latents, noise, timesteps)
+    noisy_latents = pipeline.scheduler.add_noise(latents, noise, timesteps).to(dtype=torch.float16)
     
     # 4. Prédire le bruit/velocity avec le Transformer
     with torch.no_grad():
