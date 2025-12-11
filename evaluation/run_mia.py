@@ -62,7 +62,7 @@ def compute_loss(pipeline, image, prompt, generator=None):
         transforms.Normalize([0.5], [0.5]),
     ])
     
-    pixel_values = img_transform(image).unsqueeze(0).to(device)
+    pixel_values = img_transform(image).unsqueeze(0).to(device).to(dtype=torch.float16)
     
     with torch.no_grad():
         latents = pipeline.vae.encode(pixel_values).latent_dist.sample(generator=generator)
