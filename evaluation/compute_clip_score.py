@@ -90,9 +90,9 @@ def calculate_clip_score(model, processor, image_paths, prompts, device):
     return scores
 
 def main():
-    print(f"Initialisation du modèle CLIP sur {DEVICE}...")
-    model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(DEVICE)
-    processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+    print(f"Initialisation du modèle CLIP (ViT-L/14) sur {DEVICE}...")
+    model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14").to(DEVICE)
+    processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
     
     results = {}
     
