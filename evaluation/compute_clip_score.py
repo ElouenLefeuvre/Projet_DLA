@@ -99,6 +99,7 @@ def main():
     # Pour chaque modèle (base, blip, llava, gemini)
     for model_name in MODELS_TO_EVALUATE:
         model_results = {}
+        all_model_scores = []  # Pour stocker tous les scores de ce modèle
         print(f"\nEvaluating Model: {model_name}")
         
         # Pour chaque type de caption (sous-dossier)
@@ -134,6 +135,9 @@ def main():
             # Calculer CLIP Score
             scores = calculate_clip_score(model, processor, image_paths, prompts, DEVICE)
             
+            # Ajouter aux scores globaux du modèle
+            all_model_scores.extend(scores)
+            
             avg_score = np.mean(scores)
             std_score = np.std(scores)
             
@@ -144,6 +148,17 @@ def main():
             }
             
             print(f"    CLIP Score: {avg_score:.2f} ± {std_score:.2f}")
+            
+        # Calculer le score GLOBAL pour ce modèle
+        if all_model_scores:
+            global_avg = np.mean(all_model_scores)
+            global_std = np.std(all_model_scores)
+            model_results["GLOBAL"] = {
+                "mean": float(global_avg),
+                "std": float(global_std),
+                "count": len(all_model_scores)
+            }
+            print(f"  👉 GLOBAL Model Score: {global_avg:.2f} ± {global_std:.2f}")
             
         results[model_name] = model_results
         
@@ -160,7 +175,11 @@ def main():
     print("-" * 80)
     for model_name, res in results.items():
         for cap_type, stats in res.items():
-            print(f"{model_name:<10} | {cap_type:<20} | {stats['mean']:.2f}")
+            # Mettre en évidence la ligne GLOBAL
+            if cap_type == "GLOBAL":
+                print(f"{model_name:<10} | {cap_type:<20} | {stats['mean']:.4f} ± {stats['std']:.4f} ***")
+            else:
+                print(f"{model_name:<10} | {cap_type:<20} | {stats['mean']:.4f} ± {stats['std']:.4f}")
     print("="*80)
 
 if __name__ == "__main__":
