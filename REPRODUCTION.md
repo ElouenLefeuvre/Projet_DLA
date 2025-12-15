@@ -18,7 +18,28 @@ ssh <login>@mesocentre.fr
 cd ~/dla_projet/dla
 ```
 
-## 2. Génération des Datasets
+## 2. Disponibilité des Données
+
+Si vous ne souhaitez pas tout régénérer, voici où trouver les données déjà existantes :
+
+### Datasets (Images + Captions)
+Les datasets déjà légendés sont disponibles dans le dossier `datasets/` :
+*   `datasets/oxford_flowers102_blip/` : Dataset avec captions BLIP
+*   `datasets/oxford_flowers102_llava/` : Dataset avec captions LLaVA
+*   `datasets/oxford_flowers102_gemini/` : Dataset avec captions Gemini
+*   `datasets/oxford_flowers102_blip_test/` : Dataset avec captions Base pour les tests
+*   `datasets/oxford_flowers102_llava_test/` : Dataset avec captions Base pour les tests
+*   `datasets/oxford_flowers102_gemini_test/` : Dataset avec captions Base pour les tests
+
+### Images Générées
+Les images générées par nos modèles fine-tunés sont dans `generated_images/` :
+*   `generated_images/blip/` : Images générées par le modèle BLIP
+*   `generated_images/llava/` : Images générées par le modèle LLaVA
+*   `generated_images/gemini/` : Images générées par le modèle Gemini
+*   `generated_images/base/` : Images générées par le modèle de base (non fine-tuné)
+*   `generated_images/fidelity_check/` : Images générées pour vérifier la fidélité
+
+## 3. Génération des Datasets
 
 Cette étape génère les fichiers `data_info.json` nécessaires au training. Exécutez ces notebooks localement ou sur un serveur Jupyter :
 
